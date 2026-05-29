@@ -7,15 +7,16 @@ import DetailLigne from './DetailLigne';
 import Footer from './Footer';
 
 function App() {
-  // 1. Trois états
   const [lignes, setLignes] = useState([]);
   const [chargement, setChargement] = useState(true);
   const [erreur, setErreur] = useState(null);
   const [recherche, setRecherche] = useState("");
   const [ligneSelectionnee, setLigneSelectionnee] = useState(null);
 
-  // 2. Charger les données au démarrage
-  useEffect(() => {
+  // Fonction extraite — appelable depuis useEffect ET depuis le bouton
+  function chargerLignes() {
+    setChargement(true);
+    setErreur(null);
     fetch("http://localhost:5000/lignes")
       .then(response => {
         if (!response.ok) {
@@ -31,25 +32,31 @@ function App() {
         setErreur(error.message);
         setChargement(false);
       });
+  }
+
+  // Appel au démarrage
+  useEffect(() => {
+    chargerLignes();
   }, []);
 
-  // 3. Filtre de recherche
   const lignesFiltrees = lignes.filter(l =>
     l.depart.toLowerCase().includes(recherche.toLowerCase()) ||
     l.arrivee.toLowerCase().includes(recherche.toLowerCase()) ||
     l.numero.includes(recherche)
   );
 
-  // 4. Clic sur une ligne
-  function handleClickLigne(ligne) {
-    if (ligneSelectionnee && ligneSelectionnee.id === ligne.id) {
-      setLigneSelectionnee(null);
-    } else {
-      setLigneSelectionnee(ligne);
-    }
+ function handleClickLigne(ligne) {
+  if (ligneSelectionnee && ligneSelectionnee.id === ligne.id) {
+    setLigneSelectionnee(null);
+  } else {
+    fetch("http://localhost:5000/lignes/" + ligne.id)
+      .then(response => response.json())
+      .then(data => {
+        setLigneSelectionnee(data);
+      });
   }
+ }
 
-  // 5. Écran de chargement
   if (chargement) {
     return (
       <div className="App">
@@ -61,7 +68,6 @@ function App() {
     );
   }
 
-  // 6. Écran d'erreur
   if (erreur) {
     return (
       <div className="App">
@@ -77,12 +83,15 @@ function App() {
     );
   }
 
-  // 7. Écran normal
   return (
     <div className="App">
       <Header />
       <main className="contenu">
         <Recherche valeur={recherche} onChange={setRecherche} />
+        {/* Bouton Recharger */}
+        <button className="bouton-recharger" onClick={chargerLignes}>
+          Recharger
+        </button>
         <p className="resultat-recherche">
           {lignesFiltrees.length} ligne{lignesFiltrees.length > 1 ? 's' : ''}{' '}
           trouvée{lignesFiltrees.length > 1 ? 's' : ''}

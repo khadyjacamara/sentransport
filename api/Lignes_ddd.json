@@ -48,5 +48,21 @@
     "arrets": 11,
     "listeArrets": ["Yoff Village", "Aeroport LSS",
       "Parcelles U17", "Grand Yoff", "HLM", "Sandaga"]
-  }
+  },
+  {
+  "id": 7,
+  "numero": "27",
+  "depart": "Guédiawaye",
+  "arrivee": "Plateau",
+  "arrets": 9,
+  "listeArrets": ["Guédiawaye", "Sam Notaire", "Cambérène", "Sicap Liberté", "Liberté 6", "Fann", "Corniche", "Soumbédioune", "Plateau"]
+},
+{
+  "id": 8,
+  "numero": "36",
+  "depart": "Thiaroye",
+  "arrivee": "Sandaga",
+  "arrets": 7,
+  "listeArrets": ["Thiaroye", "Yeumbeul", "Diamaguène", "Pikine", "Dalifort", "Colobane", "Sandaga"]
+}
 ]

@@ -5,6 +5,7 @@ import Recherche from './Recherche';
 import LigneBus from './LigneBus';
 import DetailLigne from './DetailLigne';
 import Footer from './Footer';
+import Carte from './Carte';
 
 function App() {
   const [lignes, setLignes] = useState([]);
@@ -13,7 +14,6 @@ function App() {
   const [recherche, setRecherche] = useState("");
   const [ligneSelectionnee, setLigneSelectionnee] = useState(null);
 
-  // Fonction extraite — appelable depuis useEffect ET depuis le bouton
   function chargerLignes() {
     setChargement(true);
     setErreur(null);
@@ -34,7 +34,6 @@ function App() {
       });
   }
 
-  // Appel au démarrage
   useEffect(() => {
     chargerLignes();
   }, []);
@@ -45,17 +44,17 @@ function App() {
     l.numero.includes(recherche)
   );
 
- function handleClickLigne(ligne) {
-  if (ligneSelectionnee && ligneSelectionnee.id === ligne.id) {
-    setLigneSelectionnee(null);
-  } else {
-    fetch("http://localhost:5000/lignes/" + ligne.id)
-      .then(response => response.json())
-      .then(data => {
-        setLigneSelectionnee(data);
-      });
+  function handleClickLigne(ligne) {
+    if (ligneSelectionnee && ligneSelectionnee.id === ligne.id) {
+      setLigneSelectionnee(null);
+    } else {
+      fetch("http://localhost:5000/lignes/" + ligne.id)
+        .then(response => response.json())
+        .then(data => {
+          setLigneSelectionnee(data);
+        });
+    }
   }
- }
 
   if (chargement) {
     return (
@@ -88,7 +87,6 @@ function App() {
       <Header />
       <main className="contenu">
         <Recherche valeur={recherche} onChange={setRecherche} />
-        {/* Bouton Recharger */}
         <button className="bouton-recharger" onClick={chargerLignes}>
           Recharger
         </button>
@@ -108,6 +106,7 @@ function App() {
           />
         ))}
         {ligneSelectionnee && <DetailLigne ligne={ligneSelectionnee} />}
+        <Carte />
       </main>
       <Footer />
     </div>
